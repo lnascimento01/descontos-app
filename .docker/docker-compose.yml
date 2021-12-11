@@ -1,0 +1,47 @@
+version: '3'
+networks:
+  privateNetwork:
+    name: private-network
+    driver: bridge
+
+services:
+
+    database:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        container_name: prv_database
+        environment:
+          ACCEPT_EULA: "Y"
+          MYSQL_ROOT_PASSWORD: "d3s0nt0s_dev"
+        expose:
+          - "3301"
+        ports:
+          - "3306:3306"
+        networks:
+          - privateNetwork
+
+    backend:
+        build:
+          context: .
+          dockerfile: dockerfile
+        container_name: prv_backend
+        expose:
+          - "8181"
+        ports:
+          - "8181:80"
+        volumes:
+          - ../:/var/www
+        links:
+          - database
+        networks:
+          - privateNetwork
+
+    redis:
+      image: redis
+      container_name: prv_redis
+      command: redis-server --requirepass Redis2019!
+      ports:
+        - "6379:6379"
+      networks:
+        - privateNetwork

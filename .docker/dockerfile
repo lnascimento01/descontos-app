@@ -1,0 +1,31 @@
+FROM php:8.0-apache
+ARG XDEBUG_VERSION=3.0.4
+
+RUN mkdir -p ~/.gnupg/private-keys-v1.d
+RUN chmod 700 ~/.gnupg/private-keys-v1.d
+
+RUN apt update \
+    && apt install -qqy libpq-dev libzip-dev libpng-dev libonig-dev libxml2-dev git \
+                    unzip libfreetype6-dev libjpeg62-turbo-dev \
+                    libpng-dev libaio1 wget \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    &&  rm -rf /var/lib/{apt,dpkg,cache,log}/
+RUN docker-php-ext-install gd xml zip mbstring pdo_mysql
+
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+     && docker-php-ext-install pdo pdo_pgsql pgsql
+
+WORKDIR /var/www
+
+# Instalando o Composer
+RUN php -r "copy('http://getcomposer.org/installer', 'composer-setup.php');"
+RUN php composer-setup.php
+RUN php -r "unlink('composer-setup.php');"
+RUN mv composer.phar /usr/local/bin/composer
+COPY . /var/www
+COPY app.conf /etc/apache2/sites-enabled
+RUN rm /etc/apache2/sites-enabled/000-default.conf
+RUN a2enmod rewrite
+# RUN chmod 777 /var/www/storage/ -R
+VOLUME /var/www
