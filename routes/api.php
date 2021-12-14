@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\CompaniesController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+
+/** @var Laravel\Lumen\Routing\Router $router */
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+$router->group(['prefix' => 'companies'], function () use ($router) {
+    $router->get('/{id}', [CompaniesController::class, 'show']);
+    $router->get('/', [CompaniesController::class, 'list']);
+    $router->post('/', [CompaniesController::class, 'save']);
+    $router->put('/{id}', [CompaniesController::class, 'update']);
+    $router->delete('/{id}', [CompaniesController::class, 'delete']);
 });
-
-Route::get('/postando', [CompaniesController::class, 'get']);
