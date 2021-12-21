@@ -14,11 +14,11 @@ class CompaniesController extends Controller
         return response()->json($service->get($id));
     }
 
-    public function list(Request $request)
+    public function list()
     {
         $service = new CompaniesService;
 
-        return response()->json($service->list($request));
+        return response()->json($service->list());
     }
 
     public function save(Request $request)
