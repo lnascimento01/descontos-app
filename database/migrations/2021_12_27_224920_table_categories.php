@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CompaniesCategories extends Migration
+class TableCategories extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CompaniesCategories extends Migration
      */
     public function up()
     {
-        Schema::create('companies_categories', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
@@ -31,6 +31,6 @@ class CompaniesCategories extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies_categories');
+        Schema::dropIfExists('categories');
     }
 }

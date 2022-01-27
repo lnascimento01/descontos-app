@@ -37,6 +37,22 @@ services:
         networks:
           - privateNetwork
 
+    app:
+        build:
+          context: .
+          dockerfile: dockerfile
+        container_name: prv_app
+        expose:
+          - "8182"
+        ports:
+          - "8182:80"
+        volumes:
+          - /home/logcomex/Documentos/Projetos/privados/descontos_app/:/var/www_app
+        links:
+          - backend
+        networks:
+          - privateNetwork
+
     redis:
       image: redis
       container_name: prv_redis

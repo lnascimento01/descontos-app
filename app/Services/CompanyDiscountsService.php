@@ -3,12 +3,12 @@
 namespace App\Services;
 
 use App\Enums\ErrorEnum;
-use App\Models\Companies\Companies;
+use App\Models\Companies\CompanyDiscounts;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-class CompaniesService
+class CompanyDiscountsService
 {
     public function get(int $id)
     {
@@ -21,18 +21,18 @@ class CompaniesService
             ErrorEnum::OPT001['code']
         ));
 
-        return Companies::find($id);
+        return CompanyDiscounts::find($id);
     }
 
     public function list(): Collection
     {
-        return Companies::all();
+        return CompanyDiscounts::all();
     }
 
     public function save(Request $request)
     {
-        $fields = ['name', 'category'];
-        $rules = ['required|string|unique:companies,name', 'required'];
+        $fields = ['company_id', 'discount_id'];
+        $rules = ['required|int|exists:companies,id', 'required|int|exists:discounts,id|unique:company_discounts,discount_id,company_id'];
         $validate = validateHelper($fields, $rules, $request->all(), $messages = null);
 
         throw_if($validate->fails(), new Exception(
@@ -40,7 +40,7 @@ class CompaniesService
             ErrorEnum::OPT002['code']
         ));
 
-        return Companies::insertGetId($request->all());
+        return CompanyDiscounts::insertGetId($request->all());
     }
 
     public function update(int $id, Request $request)
