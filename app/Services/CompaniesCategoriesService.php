@@ -3,18 +3,17 @@
 namespace App\Services;
 
 use App\Enums\ErrorEnum;
-use App\Models\Companies\Discounts;
+use App\Models\Companies\CompaniesCategories;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
-class DiscountsService
+class CompaniesCategoriesService
 {
     public function get(int $id)
     {
         $fields = ['id'];
-        $rules = ['required|exists:discounts,id'];
+        $rules = ['required|exists:companies,id'];
         $validate = validateHelper($fields, $rules, ['id' => $id], $messages = null);
 
         throw_if($validate->fails(), new Exception(
@@ -22,18 +21,18 @@ class DiscountsService
             ErrorEnum::OPT001['code']
         ));
 
-        return Discounts::find($id);
+        return CompaniesCategories::find($id);
     }
 
     public function list(): Collection
     {
-        return Discounts::all();
+        return CompaniesCategories::all();
     }
 
     public function save(Request $request)
     {
-        $fields = ['name', 'category_id'];
-        $rules = ['required|string|unique:discounts,name', 'required'];
+        $fields = ['name', 'description'];
+        $rules = ['required|string|unique:companies_categories,name', 'required'];
         $validate = validateHelper($fields, $rules, $request->all(), $messages = null);
 
         throw_if($validate->fails(), new Exception(
@@ -41,15 +40,14 @@ class DiscountsService
             ErrorEnum::OPT002['code']
         ));
 
-        return Discounts::insertGetId($request->all());
+        return CompaniesCategories::insertGetId($request->all());
     }
 
     public function update(int $id, Request $request)
     {
         $object = $this->get($id);
-        $fields = ['name', 'category_id'];
-        $rules = ['unique:discounts,name,' . $object->id, 'int|exists:categories,id'];
-
+        $fields = ['name', 'description'];
+        $rules = ['string|unique:companies_categories,name' . $object->id, 'int'];
         $validate = validateHelper($fields, $rules, $request->all(), $messages = null);
 
         foreach ($request->all() as $key => $param) {

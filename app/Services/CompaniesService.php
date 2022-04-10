@@ -31,7 +31,7 @@ class CompaniesService
 
     public function save(Request $request)
     {
-        $fields = ['name', 'category'];
+        $fields = ['name', 'company_category_id'];
         $rules = ['required|string|unique:companies,name', 'required'];
         $validate = validateHelper($fields, $rules, $request->all(), $messages = null);
 
@@ -46,7 +46,7 @@ class CompaniesService
     public function update(int $id, Request $request)
     {
         $object = $this->get($id);
-        $fields = ['name', 'category'];
+        $fields = ['name', 'company_category_id'];
         $rules = ['string|unique:companies,name' . $object->id, 'int'];
         $validate = validateHelper($fields, $rules, $request->all(), $messages = null);
 

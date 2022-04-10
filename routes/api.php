@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CompaniesCategoriesController;
 use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\CompanyDiscountsController;
 use App\Http\Controllers\DiscountsController;
@@ -20,13 +21,13 @@ use App\Http\Controllers\DiscountsController;
 
 $router->group(['prefix' => 'companies'], function () use ($router) {
 
-    // $router->group(['prefix' => 'categories'], function () use ($router) {
-    //     $router->get('/{id}', [CompaniesController::class, 'show']);
-    //     $router->get('/', [CompaniesController::class, 'list']);
-    //     $router->post('/', [CompaniesController::class, 'save']);
-    //     $router->put('/{id}', [CompaniesController::class, 'update']);
-    //     $router->delete('/{id}', [CompaniesController::class, 'delete']);
-    // });
+    $router->group(['prefix' => 'categories'], function () use ($router) {
+        $router->get('/{id}', [CompaniesCategoriesController::class, 'show']);
+        $router->get('/', [CompaniesCategoriesController::class, 'list']);
+        $router->post('/', [CompaniesCategoriesController::class, 'save']);
+        $router->put('/{id}', [CompaniesCategoriesController::class, 'update']);
+        $router->delete('/{id}', [CompaniesCategoriesController::class, 'delete']);
+    });
 
     $router->group(['prefix' => 'discounts'], function () use ($router) {
         $router->get('/{id}', [CompanyDiscountsController::class, 'show']);
